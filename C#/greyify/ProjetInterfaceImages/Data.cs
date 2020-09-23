@@ -20,6 +20,7 @@ namespace ProjetInterfaceImages {
             LockBitsUnsafe,
             LockBitsUnsafeParallel,
             Median,
+            Zoom05,
         };
     }
 }

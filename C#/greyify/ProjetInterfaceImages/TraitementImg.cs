@@ -74,6 +74,8 @@ namespace ProjetInterfaceImages {
                 case Data.TRAITEMENTS_DISPO.Median:
                     this.Median();
                     break;
+                case Data.TRAITEMENTS_DISPO.Zoom05:
+                    break;
                 default:
                     break;
             }
@@ -293,7 +295,7 @@ namespace ProjetInterfaceImages {
             );
 
             //Offset => zone mémoire inutilisée
-            offset = xData.Stride - this.ImageRes.Width * 3;
+            offset = xData.Stride - this.ImageRes.Width * NB_COMPOSANTES_COULEUR;
             //Calcul de la taille de l'image (incluant l'offset)
             size = xData.Stride * xData.Height;
             //Création du tableau de la taille adéquate
@@ -330,93 +332,81 @@ namespace ProjetInterfaceImages {
 
         public int[] GetNeighbour(byte[] data, int i, int j, int offset) {
             List<int> listPx;
+            List<int> listIndex = new List<int>();
             int[] res = new int[NB_COMPOSANTES_COULEUR];
 
-            for (int k = 0; k < NB_COMPOSANTES_COULEUR; k++) {
+            //Récupérer les index
+            //Ligne du haut
+            //Pixel haut à gauche
+            if (i > 0 && j > 0) {
+                listIndex.Add(
+                    (i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+            //Pixel haut milieu
+            if (i > 0) {
+                listIndex.Add(
+                    (i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR
+                );
+            }
+            //Pixel haut à droite
+            if (i > 0 && j < (this.ImageRes.Width - 1)) {
+                listIndex.Add(
+                    (i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+
+            //Ligne du centre
+            //Pixel à gauche
+            if (j > 0) {
+                listIndex.Add(
+                    i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+            //Pixel actuel (centre)
+            listIndex.Add(
+                i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR
+            );
+            //Pixel à droite
+            if (j < (this.ImageRes.Width - 1)) {
+                listIndex.Add(
+                    i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+
+            //Ligne du bas
+            //Pixel bas à gauche
+            if (i < (this.ImageRes.Height - 1) && j > 0) {
+                listIndex.Add(
+                    (i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+            //Pixel bas milieu
+            if (i < (this.ImageRes.Height - 1)) {
+                listIndex.Add(
+                    (i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR
+                );
+            }
+            //Pixel bas à droite
+            if (i < (this.ImageRes.Height - 1) && j < (this.ImageRes.Width - 1)) {
+                listIndex.Add(
+                  (i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR
+                );
+            }
+
+            //Pour les différentes couleurs qui composent un pixel
+            for (int color = 0; color < NB_COMPOSANTES_COULEUR; color++) {
                 //Nouvelle liste
                 listPx = new List<int>();
-
-                //Ligne du haut
-                //Pixel haut à gauche
-                if (i > 0 && j > 0) {
-                    listPx.Add(
-                        data[
-                          ((i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
+                //Parcourir les index récupérés
+                foreach (int index in listIndex) {
+                    listPx.Add(data[index + color]);
                 }
-                //Pixel haut milieu
-                if (i > 0) {
-                    listPx.Add(
-                        data[
-                            ((i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-                //Pixel haut à droite
-                if (i > 0 && j < (this.ImageRes.Width - 1)) {
-                    listPx.Add(
-                        data[
-                            ((i - 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-
-                //Ligne du centre
-                //Pixel à gauche
-                if (j > 0) {
-                    listPx.Add(
-                        data[
-                            (i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-                //Pixel actuel (centre)
-                listPx.Add(
-                    data[
-                        (i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR) + k
-                    ]
-                );
-                //Pixel à droite
-                if (j < (this.ImageRes.Width - 1)) {
-                    listPx.Add(
-                        data[
-                            (i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-
-                //Ligne du bas
-                //Pixel bas à gauche
-                if (i < (this.ImageRes.Height - 1) && j > 0) {
-                    listPx.Add(
-                        data[
-                            ((i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j - 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-                //Pixel bas milieu
-                if (i < (this.ImageRes.Height - 1)) {
-                    listPx.Add(
-                        data[
-                            ((i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-                //Pixel bas à droite
-                if (i < (this.ImageRes.Height - 1) && j < (this.ImageRes.Width - 1)) {
-                    listPx.Add(
-                        data[
-                            ((i + 1) * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + (j + 1) * NB_COMPOSANTES_COULEUR) + k
-                        ]
-                    );
-                }
-
                 //Trier la liste
                 listPx.Sort();
 
                 //Récupérer la valeur médiane
-                res[k] = listPx[
+                res[color] = listPx[
                     (int)Math.Round((double)(listPx.Count / 2), 0, MidpointRounding.AwayFromZero)
                 ];
             }
