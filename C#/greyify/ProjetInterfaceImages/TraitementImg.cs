@@ -281,8 +281,7 @@ namespace ProjetInterfaceImages {
             this.stopwatch.Restart();
 
             //Variables
-            int size, bitsPerPx, offset, currentPx;
-            byte newColor;
+            int size, offset, currentPx;
             byte[] data;
             int[] res;
 
@@ -293,8 +292,6 @@ namespace ProjetInterfaceImages {
                 PixelFormat.Format24bppRgb
             );
 
-            //Nombre de bits par px
-            bitsPerPx = Bitmap.GetPixelFormatSize(xData.PixelFormat) / 8;
             //Offset => zone mémoire inutilisée
             offset = xData.Stride - this.ImageRes.Width * 3;
             //Calcul de la taille de l'image (incluant l'offset)
@@ -308,10 +305,12 @@ namespace ProjetInterfaceImages {
             //Transformation
             for (int i = 0; i < this.ImageRes.Height; i++) {
                 for (int j = 0; j < this.ImageRes.Width; j++) {
-                    //Récupérer le pointeur sur le pixel actuel
+                    //Récupérer le pixel actuel
                     currentPx = i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR;
 
-                    res = GetNeighbour(data, i, j, offset, data[currentPx]);
+                    //Recherche des voisins, trouver la médiane
+                    res = GetNeighbour(data, i, j, offset);
+                    //Mettre les nouvelles valeurs dans l'image
                     data[currentPx] = Convert.ToByte(res[0]);
                     data[currentPx + 1] = Convert.ToByte(res[1]);
                     data[currentPx + 2] = Convert.ToByte(res[2]);
@@ -329,15 +328,13 @@ namespace ProjetInterfaceImages {
             this.TimeTreatment = this.stopwatch.ElapsedMilliseconds;
         }
 
-        public int[] GetNeighbour(byte[] data, int i, int j, int offset, int currentPx) {
+        public int[] GetNeighbour(byte[] data, int i, int j, int offset) {
             List<int> listPx;
             int[] res = new int[NB_COMPOSANTES_COULEUR];
 
             for (int k = 0; k < NB_COMPOSANTES_COULEUR; k++) {
                 //Nouvelle liste
                 listPx = new List<int>();
-                //Pixel actuel (centre)
-                listPx.Add(currentPx);
 
                 //Ligne du haut
                 //Pixel haut à gauche
@@ -374,6 +371,12 @@ namespace ProjetInterfaceImages {
                         ]
                     );
                 }
+                //Pixel actuel (centre)
+                listPx.Add(
+                    data[
+                        (i * (this.ImageRes.Width * NB_COMPOSANTES_COULEUR + offset) + j * NB_COMPOSANTES_COULEUR) + k
+                    ]
+                );
                 //Pixel à droite
                 if (j < (this.ImageRes.Width - 1)) {
                     listPx.Add(
@@ -412,7 +415,7 @@ namespace ProjetInterfaceImages {
                 //Trier la liste
                 listPx.Sort();
 
-                //Récupérer la valeur médianne
+                //Récupérer la valeur médiane
                 res[k] = listPx[
                     (int)Math.Round((double)(listPx.Count / 2), 0, MidpointRounding.AwayFromZero)
                 ];
