@@ -1,0 +1,15 @@
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\metadata_webp.exe.config
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\metadata_webp.exe
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\metadata_webp.pdb
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.csprojAssemblyReference.cache
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.FrmMain.resources
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.Properties.Resources.resources
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.csproj.GenerateResource.cache
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.csproj.CoreCompileInputs.cache
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.exe
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.pdb
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\MetadataExtractor.dll
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\XmpCore.dll
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\MetadataExtractor.xml
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\bin\Debug\XmpCore.xml
+C:\Users\Administrateur\Desktop\AGRA\C#\metadata_webp\metadata_webp\obj\Debug\metadata_webp.csproj.CopyComplete
