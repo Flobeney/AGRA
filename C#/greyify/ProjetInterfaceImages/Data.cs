@@ -24,6 +24,8 @@ namespace ProjetInterfaceImages {
             Zoom2,
             Zoom05Bi,
             Zoom2Bi,
+            MasqueEt,
+            MasqueOu,
         };
     }
 }

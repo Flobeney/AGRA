@@ -91,6 +91,12 @@ namespace ProjetInterfaceImages {
                 case Data.TRAITEMENTS_DISPO.Zoom2Bi:
                     this.ResizeBi(2);
                     break;
+                case Data.TRAITEMENTS_DISPO.MasqueEt:
+                    this.ApplyMask(true);
+                    break;
+                case Data.TRAITEMENTS_DISPO.MasqueOu:
+                    this.ApplyMask(false);
+                    break;
                 default:
                     break;
             }
@@ -541,6 +547,10 @@ namespace ProjetInterfaceImages {
             this.ImageTmp.UnlockBits(xData);
         }
 
+        /// <summary>
+        /// Resize une image en bilatéral
+        /// </summary>
+        /// <param name="scale">Valeur du resize</param>
         public void ResizeBi(double scale) {
             //Copier l'image de base dans celle de résultat
             this.ImageRes = new Bitmap(this.ImageBase, (int)(this.ImageBase.Width * scale), (int)(this.ImageBase.Height * scale));
@@ -581,6 +591,10 @@ namespace ProjetInterfaceImages {
             this.TimeTreatment = this.stopwatch.ElapsedMilliseconds;
         }
 
+        /// <summary>
+        /// Resize une image
+        /// </summary>
+        /// <param name="scale">Valeur du resize</param>
         public void Resize(double scale) {
             //Copier l'image de base dans celle de résultat
             this.ImageRes = new Bitmap(this.ImageBase, (int)(this.ImageBase.Width * scale), (int)(this.ImageBase.Height * scale));
@@ -589,22 +603,77 @@ namespace ProjetInterfaceImages {
             this.stopwatch.Restart();
 
             //Variables
-            Color currentColor;
             double tScale = (1 / scale);
 
             //Parcourir l'image
             for (int x = 0; x < this.ImageRes.Width; x++) {
                 for (int y = 0; y < this.ImageRes.Height; y++) {
-                    currentColor = this.ImageBase.GetPixel(
+                    this.ImageRes.SetPixel(x, y, this.ImageBase.GetPixel(
                         (int)Math.Floor(x * tScale),
                         (int)Math.Floor(y * tScale)
-                    );
-                    this.ImageRes.SetPixel(x, y, currentColor);
+                    ));
                 }
             }
             //Fin du traitement
             this.stopwatch.Stop();
             this.TimeTreatment = this.stopwatch.ElapsedMilliseconds;
+        }
+
+        private void ApplyMask(bool etOrOu) {
+            //Copier l'image de base dans celle de résultat
+            this.ImageRes = new Bitmap(this.ImageBase, this.ImageBase.Width, this.ImageBase.Height);
+            //Début du traitement
+            this.TimeTreatment = 0;
+            this.stopwatch.Restart();
+
+            //Variables
+            Bitmap mask = new Bitmap((etOrOu ? Properties.Resources.maskEt : Properties.Resources.maskOu), this.ImageBase.Width, this.ImageBase.Height);
+            //Color colorImg;
+            //Color colorMask;
+
+            //Parcourir l'image
+            for (int x = 0; x < this.ImageRes.Width; x++) {
+                for (int y = 0; y < this.ImageRes.Height; y++) {
+
+                    //Masque ET
+                    if (etOrOu) {
+                        //Pixel actuel du masque = noir
+                        if (ColorEquals(mask.GetPixel(x, y), Color.Black)) {
+                            this.ImageRes.SetPixel(x, y, Color.Black);
+                            //Avec des opérations booléens
+                            //colorImg = this.ImageRes.GetPixel(x, y);
+                            //colorMask = mask.GetPixel(x, y);
+                            //this.ImageRes.SetPixel(x, y, Color.FromArgb(
+                            //    colorMask.R & colorImg.R, colorMask.G & colorImg.G, colorMask.B & colorImg.B
+                            //));
+                        }
+                    } else {
+                        //Masque OU
+                        //Pixel actuel du masque = blanc
+                        if (ColorEquals(mask.GetPixel(x, y), Color.White)) {
+                            this.ImageRes.SetPixel(x, y, Color.White);
+                        }
+                    }
+                    
+                }
+            }
+            //Fin du traitement
+            this.stopwatch.Stop();
+            this.TimeTreatment = this.stopwatch.ElapsedMilliseconds;
+        }
+
+        /// <summary>
+        /// Comparaison de 2 couleurs
+        /// </summary>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
+        /// <returns></returns>
+        public bool ColorEquals(Color color1, Color color2) {
+            return (
+                (color1.R == color2.R) &&
+                (color1.G == color2.G) &&
+                (color1.B == color2.B)
+            );
         }
 
     }
