@@ -1,6 +1,6 @@
 # Projet AGRA
 
-## Instructions de lancement
+## Instructions de lancement
 
 * Il faut installer la librairie [opencv-python](https://pypi.org/project/opencv-python/) avec la commande `pip install opencv-contrib-python`
 * Il y a plusieurs paramètres qui peuvent être réglés directement dans le programme, en modifiant certaines constantes :
@@ -9,6 +9,6 @@
   * `DRAW_RECT_FACE` : si on signale les visages avec un rectangle
 * Par défaut, le programme récupère le flux de la webcam et ne signale pas les visages
 
-## Description du projet
+## Description du projet
 
 Ce programme a un seul but très simple : ajouter un masque sur les bouches qu'il trouve, ce qui est assez tendance actuellement 
