@@ -1,5 +1,7 @@
 # Projet AGRA
 
+[Lien du GitHub](https://github.com/Flobeney/AGRA/tree/master/Python/faceRecognition)
+
 ## Instructions de lancement
 
 * Il faut installer la librairie [opencv-python](https://pypi.org/project/opencv-python/) avec la commande `pip install opencv-contrib-python`
